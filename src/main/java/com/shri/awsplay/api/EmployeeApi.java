@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shri.awsplay.dto.EmployeeDTO;
 import com.shri.awsplay.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,12 @@ public class EmployeeApi {
     @PostMapping()
     public ResponseEntity<?> createEmployeeAsync(@RequestBody EmployeeDTO employee) {
         employeeService.createEmployeeAsync(employee);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<?> registerSNSHandler(@RequestBody String payload) {
+        System.out.println(payload);
         return ResponseEntity.accepted().build();
     }
 
