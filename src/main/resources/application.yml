@@ -1,0 +1,8 @@
+employee:
+    sns:
+      topicARN: arn:aws:sns:ap-south-1:270224776761:employee-topic
+    sqs:
+      queueUrl: https://sqs.ap-south-1.amazonaws.com/270224776761/${employee.sqs.queueName}
+      queueName: employee-queue
+    dynamodb:
+      tableName: employee
