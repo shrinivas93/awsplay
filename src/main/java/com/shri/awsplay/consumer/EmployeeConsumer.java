@@ -31,6 +31,7 @@ public class EmployeeConsumer {
     @JmsListener(destination = "${employee.sqs.queueName}")
     public void listen(String employeeMessage) {
         try {
+            log.info("EmployeeMessage consumed from SQS - {}", employeeMessage);
             EmployeeDTO employee = objectMapper.readValue(employeeMessage, EmployeeDTO.class);
             log.info("Employee consumed from SQS - {}", employee);
             String id = String.join("_", employee.getName(), employee.getGender().name(), String.valueOf(employee.getSalary()), String.valueOf(employee.isPermanent()));

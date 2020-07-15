@@ -43,8 +43,15 @@ public class EmployeeApi {
         log.info("SNS Payload - {}", snsPayload);
         try {
             Map payloadMap = objectMapper.readValue(snsPayload, Map.class);
+            if(null == payloadMap) {
+                log.error("payloadMap is null");
+            }
             EmployeeDTO employee = objectMapper.convertValue(payloadMap.get("body"), EmployeeDTO.class);
-            employeeService.createEmployeeSnsHandler(employee);
+            if(null == employee) {
+                log.error("employee is null");
+            } else {
+                employeeService.createEmployeeSnsHandler(employee);
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new RuntimeException();
