@@ -1,5 +1,6 @@
 package com.shri.awsplay.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shri.awsplay.dto.EmployeeDTO;
 import com.shri.awsplay.service.EmployeeService;
@@ -35,10 +36,10 @@ public class EmployeeApi {
     }
 
     @PostMapping(value = "/snsHandler", consumes = "text/plain;charset=UTF-8")
-    public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody String snsPayload) {
+    public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody String snsPayload) throws JsonProcessingException {
         log.info("POST /employees/snsHandler [application/json]");
         log.info("SNS Payload - {}", snsPayload);
-        EmployeeDTO employee = objectMapper.convertValue(snsPayload, EmployeeDTO.class);
+        EmployeeDTO employee = objectMapper.readValue(snsPayload, EmployeeDTO.class);
         if (null == employee) {
             log.error("employee is null");
         } else {
