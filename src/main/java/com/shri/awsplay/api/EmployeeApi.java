@@ -1,17 +1,14 @@
 package com.shri.awsplay.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shri.awsplay.dto.EmployeeDTO;
 import com.shri.awsplay.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -41,20 +38,11 @@ public class EmployeeApi {
     public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody String snsPayload) {
         log.info("POST /employees/snsHandler [application/json]");
         log.info("SNS Payload - {}", snsPayload);
-        try {
-            Map payloadMap = objectMapper.readValue(snsPayload, Map.class);
-            if(null == payloadMap) {
-                log.error("payloadMap is null");
-            }
-            EmployeeDTO employee = objectMapper.convertValue(payloadMap.get("body"), EmployeeDTO.class);
-            if(null == employee) {
-                log.error("employee is null");
-            } else {
-                employeeService.createEmployeeSnsHandler(employee);
-            }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
+        EmployeeDTO employee = objectMapper.convertValue(snsPayload, EmployeeDTO.class);
+        if (null == employee) {
+            log.error("employee is null");
+        } else {
+            employeeService.createEmployeeSnsHandler(employee);
         }
         return ResponseEntity.ok().build();
     }
