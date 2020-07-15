@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shri.awsplay.dto.EmployeeDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.annotation.JmsListener;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class EmployeeConsumer {
 
@@ -30,7 +32,7 @@ public class EmployeeConsumer {
     public void listen(String employeeMessage) {
         try {
             EmployeeDTO employee = objectMapper.readValue(employeeMessage, EmployeeDTO.class);
-            System.out.println(employee);
+            log.info("Employee consumed from SQS - {}", employee);
             String id = String.join("_", employee.getName(), employee.getGender().name(), String.valueOf(employee.getSalary()), String.valueOf(employee.isPermanent()));
             Map<String, AttributeValue> item = new HashMap<>();
             item.put("id", new AttributeValue(id.toLowerCase()));
@@ -38,7 +40,9 @@ public class EmployeeConsumer {
             item.put("gender", new AttributeValue(employee.getGender().name()));
             item.put("salary", new AttributeValue(String.valueOf(employee.getSalary())));
             item.put("permanent", new AttributeValue(String.valueOf(employee.isPermanent())));
+            log.info("Putting item into DynamoDB - {}", item);
             amazonDynamoDB.putItem(employeeTable, item);
+            log.info("Item put to DynamoDB");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
