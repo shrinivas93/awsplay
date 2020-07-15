@@ -1,5 +1,6 @@
 package com.shri.awsplay.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shri.awsplay.dto.EmployeeDTO;
 import com.shri.awsplay.service.EmployeeService;
@@ -36,12 +37,18 @@ public class EmployeeApi {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping(value = "/snsHandler", consumes = MediaType.ALL_VALUE)
-    public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody Map<String, Object> snsPayload) {
+    @PostMapping(value = "/snsHandler", consumes = "text/plain;charset=UTF-8")
+    public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody String snsPayload) {
         log.info("POST /employees/snsHandler [application/json]");
         log.info("SNS Payload - {}", snsPayload);
-        EmployeeDTO employee = objectMapper.convertValue(snsPayload.get("body"), EmployeeDTO.class);
-        employeeService.createEmployeeSnsHandler(employee);
+        try {
+            Map payloadMap = objectMapper.readValue(snsPayload, Map.class);
+            EmployeeDTO employee = objectMapper.convertValue(payloadMap.get("body"), EmployeeDTO.class);
+            employeeService.createEmployeeSnsHandler(employee);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
         return ResponseEntity.ok().build();
     }
 
