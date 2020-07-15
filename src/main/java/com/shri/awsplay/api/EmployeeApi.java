@@ -36,13 +36,6 @@ public class EmployeeApi {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping(value = "/snsHandler", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<?> registerSNSHandler(@RequestBody String payload) {
-        log.info("POST /employees [text/plain]");
-        log.info("Payload - {}", payload);
-        return ResponseEntity.accepted().build();
-    }
-
     @PostMapping("/snsHandler")
     public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody Map<String, Object> snsPayload) {
         log.info("POST /employees/snsHandler [application/json]");
@@ -50,6 +43,13 @@ public class EmployeeApi {
         EmployeeDTO employee = objectMapper.convertValue(snsPayload.get("body"), EmployeeDTO.class);
         employeeService.createEmployeeSnsHandler(employee);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/snsHandler", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<?> registerSNSHandler(@RequestBody String payload) {
+        log.info("POST /employees [text/plain]");
+        log.info("Payload - {}", payload);
+        return ResponseEntity.accepted().build();
     }
 
 }
