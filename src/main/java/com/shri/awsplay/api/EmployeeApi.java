@@ -36,7 +36,7 @@ public class EmployeeApi {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping("/snsHandler")
+    @PostMapping(value = "/snsHandler", consumes = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<?> createEmployeeSnsHandler(@RequestBody Map<String, Object> snsPayload) {
         log.info("POST /employees/snsHandler [application/json]");
         log.info("SNS Payload - {}", snsPayload);
