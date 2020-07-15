@@ -36,7 +36,7 @@ public class EmployeeApi {
         return ResponseEntity.accepted().build();
     }
 
-    @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(value = "/snsHandler", consumes = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<?> registerSNSHandler(@RequestBody String payload) {
         log.info("POST /employees [text/plain]");
         log.info("Payload - {}", payload);
